@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Go-playground/reflect/structure"
 	"fmt"
 	"reflect"
 )
@@ -31,6 +32,32 @@ func main() {
 	fmt.Println(b)                       // 3
 	fmt.Println(reflect.TypeOf(testInt)) // main.TestInt
 	fmt.Println(testInt)                 // 3
+
+	fmt.Println("--------------------------------------------------")
+
+	t := &structure.TestStruct{TestStructValue: 1}
+	rt := reflect.TypeOf(t)
+	numMethod := rt.NumMethod()
+	fmt.Println("NumMethod", numMethod)
+
+	l := 0
+	for l < numMethod {
+		m := rt.Method(l)
+		fmt.Println("Method:", m.Name, "Type:", m.Type)
+		fmt.Println("Func:", m.Func, "Index:", m.Index)
+		fmt.Println("PkgPath:", m.PkgPath)
+
+		l += 1
+	}
+
+	fmt.Println("--------------------------------------------------")
+
+	m, _ := rt.MethodByName("Increment")
+	m2, _ := rt.MethodByName("String")
+
+	m.Func.Call([]reflect.Value{reflect.ValueOf(t)})
+	m.Func.Call([]reflect.Value{reflect.ValueOf(t)})
+	fmt.Println("call from reflect.TypeOf: ", m2.Func.Call([]reflect.Value{reflect.ValueOf(t)}))
 }
 
 /*
